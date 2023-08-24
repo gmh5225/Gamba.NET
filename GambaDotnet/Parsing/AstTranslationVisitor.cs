@@ -45,8 +45,9 @@ namespace Gamba.Parsing
                 "<<" => new MulNode(op1, new PowerNode(new ConstNode(2, bitSize), op2)),
                 "+" => new AddNode(op1, op2),
                 "-" => new SubNode(op1, op2),
-                "^" => new XorNode(op1, op2),
                 "&" => new AndNode(op1, op2),
+                "|" => new OrNode(op1, op2),
+                "^" => new XorNode(op1, op2),
                 _ => throw new InvalidOperationException($"Unrecognized binary operator: {binaryOperator}")
             };
 

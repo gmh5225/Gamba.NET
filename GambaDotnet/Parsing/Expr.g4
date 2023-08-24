@@ -2,9 +2,9 @@ grammar Expr;
 
 gamba: expression EOF;
 
-expression: expression ('**' | '*' | '<<' | '+' | '-'  | '^' | '&') expression #BinaryExpression
+expression: ('~' | '-') expression #UnaryExpression
+            | expression ('**' | '*' | '<<' | '+' | '-' | '|' | '^' | '&') expression #BinaryExpression
             | LPARAM expression RPARAM                              #ParenthesizedExpression
-            | ('~' | '-') expression #UnaryExpression
             | NUMBER #NumberExpression
             | ID #IdExpression
             ;

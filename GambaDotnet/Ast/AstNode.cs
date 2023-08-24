@@ -15,8 +15,9 @@ namespace Gamba.Ast
         Add,
         Sub,
         Mul,
-        Xor,
         And,
+        Or,
+        Xor,
         Neg,
     }
 
@@ -94,5 +95,7 @@ namespace Gamba.Ast
 
             throw new InvalidOperationException("TODO: Properly implement equality");
         }
+
+        //public override string ToString() => AstFormatter.FormatAst(this);
     }
 }

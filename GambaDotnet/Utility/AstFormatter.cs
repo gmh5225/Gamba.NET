@@ -49,7 +49,6 @@ namespace Gamba.Utility
             if (node is BinaryNode)
             {
                 sb.Append("(");
-
                 // Pretty print "0 - x" as "-x";
                 if (node.Kind == AstKind.Sub && node.Operands[0] is ConstNode subConst && subConst.Value == 0)
                 {
@@ -71,8 +70,10 @@ namespace Gamba.Utility
 
             if (node is UnaryNode)
             {
+                sb.Append("(");
                 sb.Append($"{GetOperatorName(node.Kind)}");
                 FormatAstInternal(node.Operands[0], ref sb);
+                sb.Append(")");
                 return;
             }
 

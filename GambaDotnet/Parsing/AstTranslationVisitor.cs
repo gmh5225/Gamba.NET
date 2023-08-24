@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,11 +32,35 @@ namespace Gamba.Parsing
             return result;
         }
 
-        public override AstNode VisitBinaryExpression([NotNull] ExprParser.BinaryExpressionContext context)
+        public override AstNode VisitPowExpression([NotNull] ExprParser.PowExpressionContext context) 
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitMulExpression([NotNull] ExprParser.MulExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitSumExpression([NotNull] ExprParser.SumExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitSubExpression([NotNull] ExprParser.SubExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitShiftExpression([NotNull] ExprParser.ShiftExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitAndExpression([NotNull] ExprParser.AndExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitXorExpression([NotNull] ExprParser.XorExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        public override AstNode VisitOrExpression([NotNull] ExprParser.OrExpressionContext context)
+            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
+
+        private AstNode Binary(ExprParser.ExpressionContext exp1, ExprParser.ExpressionContext exp2, string text)
         {
-            var op1 = Visit(context.expression()[0]);
-            var op2 = Visit(context.expression()[1]);
-            var binaryOperator = context.children[1].GetText();
+            var op1 = Visit(exp1);
+            var op2 = Visit(exp2);
+            var binaryOperator = text;
 
             AstNode node = binaryOperator switch
             {
@@ -59,7 +84,7 @@ namespace Gamba.Parsing
             return Visit(context.expression());
         }
 
-        public override AstNode VisitUnaryExpression([NotNull] ExprParser.UnaryExpressionContext context)
+        public override AstNode VisitNegationExpression([NotNull] ExprParser.NegationExpressionContext context)
         {
             var op1 = Visit(context.expression());
             var unaryOperator = context.children[0].GetText();
@@ -74,6 +99,24 @@ namespace Gamba.Parsing
 
             return node;
         }
+
+        public override AstNode VisitNegativeExpression([NotNull] ExprParser.NegativeExpressionContext context)
+        {
+            var op1 = Visit(context.expression());
+            var unaryOperator = context.children[0].GetText();
+
+            AstNode node = unaryOperator switch
+            {
+                "~" => new NegNode(op1),
+                // Write "-x" as "0 - x".
+                "-" => new SubNode(new ConstNode(0, bitSize), op1),
+                _ => throw new InvalidOperationException($"Unrecognized unary operator: {unaryOperator}")
+            };
+
+            return node;
+        }
+
+
 
         public override AstNode VisitNumberExpression([NotNull] ExprParser.NumberExpressionContext context)
         {

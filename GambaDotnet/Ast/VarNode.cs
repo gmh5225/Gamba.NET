@@ -12,16 +12,17 @@ namespace Gamba.Ast
 
         protected override int OpCount => 0;
 
-        public uint Id { get; }
+        public string Name { get; }
 
-        public VarNode(uint id, uint bitSize) : base(bitSize)
+        public VarNode(string name, uint bitSize) : base(bitSize, out Action recalcHash)
         {
-            Id = id;
+            Name = name;
+            recalcHash();
         }
 
         protected override int ComputeHash()
         {
-            return base.ComputeHash() * 23 + Id.GetHashCode();
+            return base.ComputeHash() * 23 + Name.GetHashCode();
         }
     }
 }

@@ -41,6 +41,20 @@ namespace Gamba.Ast
             Hash = ComputeHash();
         }
 
+        public AstNode(uint bitSize, out Action forceComputeHash)
+        {
+            BitSize = bitSize;
+            operands = new();
+
+            // Temporary workaround to allow properties
+            // to be set by derived classes before we 
+            // calculate the hash.
+            forceComputeHash = (() =>
+            {
+                Hash = ComputeHash();
+            });
+        }
+
         public void SetOperand(int index, AstNode operand)
         {
             var last = operands[index];

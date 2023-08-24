@@ -14,9 +14,10 @@ namespace Gamba.Ast
 
         public ulong Value { get; }
 
-        public ConstNode(ulong value, uint bitSize) : base(bitSize)
+        public ConstNode(ulong value, uint bitSize) : base(bitSize, out Action recalcHash)
         {
             Value = value;
+            recalcHash();
         }
 
         protected override int ComputeHash()

@@ -37,7 +37,6 @@ namespace Gamba.Simplification
             var op1 = () => node.Operands[0];
             var op2 = () => node.Operands[1];
 
-
             foreach (var operand in node.Operands)
             {
                 Classify(operand, mapping);

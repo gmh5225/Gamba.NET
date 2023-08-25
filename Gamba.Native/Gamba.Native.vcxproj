@@ -146,8 +146,6 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="GambaExports.h" />
-    <ClInclude Include="Parsing\ShuttingYard.h" />
-    <ClInclude Include="Parsing\Veque.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

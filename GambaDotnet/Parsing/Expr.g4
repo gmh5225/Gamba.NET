@@ -4,7 +4,7 @@ gamba: expression EOF;
 
 expression:   LPARAM expression RPARAM                              #ParenthesizedExpression
             | expression ('**') expression #PowExpression
-            | ('~'|'~') expression #NegativeOrNegationExpression
+            | ('~'|'-') expression #NegativeOrNegationExpression
             | expression ('*') expression #MulExpression
             | expression ('+'|'-') expression #AddOrSubExpression
             | expression ('<<') expression #ShiftExpression

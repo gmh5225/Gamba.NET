@@ -18,8 +18,12 @@ for(int i = 0; i < 5; i++)
 
 Console.WriteLine(parsed);
 
+var sw = Stopwatch.StartNew();
 var classification = AstClassifier.Classify(ast);
-foreach(var (node, linearity) in classification)
+sw.Stop();
+Console.WriteLine($"Took {sw.ElapsedMilliseconds}");
+
+foreach (var (node, linearity) in classification)
 {
     var isLinear = AstClassifier.IsLinear(linearity);
     Console.WriteLine($"(class: {linearity}) (isLinear: {isLinear}): {node}");

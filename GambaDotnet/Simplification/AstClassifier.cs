@@ -13,7 +13,7 @@ namespace Gamba.Simplification
         Bitwise,
         // Linear expression(e.g. a + b, x * 3434) but never (a * b, x & 3453443)
         Linear,
-        // Anything with that has a polynomial degree greater than one OR contains arithmetic/nonlinear expressions inside
+        // Anything with that has a polynomial degree greater than one OR contains arithmetic/nonlinear/constant expressions inside
         // of bitwise expressions.
         Nonlinear,
         // Mixed arithmetic and bitwise expressions. These are technically linear.

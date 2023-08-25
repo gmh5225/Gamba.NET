@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gamba.Simplification
+namespace Gamba.Utility
 {
     public class DegreeCalculator
     {
@@ -17,7 +17,7 @@ namespace Gamba.Simplification
         public IReadOnlyDictionary<AstNode, int?> GetDegreeMapping(AstNode node)
         {
             // Collect degrees for children nodes.
-            foreach(var child in node.Operands)
+            foreach (var child in node.Operands)
                 GetDegreeMapping(child);
 
             var deg1 = () => mapping[node.Operands[0]];

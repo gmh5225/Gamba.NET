@@ -22,9 +22,6 @@ namespace Gamba.Parsing
             parser.BuildParseTree = true;
             var expr = parser.gamba();
 
-            var set = new HashSet<string>();
-            GetVariables(expr, set);
-
             // Throw if ANTLR has any errors.
             var errCount = parser.NumberOfSyntaxErrors;
             if (errCount > 0)
@@ -34,21 +31,6 @@ namespace Gamba.Parsing
             var visitor = new AstTranslationVisitor(bitSize);
             var result = visitor.Visit(expr);
             return result;
-        }
-
-        private static void GetVariables(IParseTree tree, HashSet<string> set)
-        {
-            if(tree is ExprParser.IdExpressionContext idExpr)
-            {
-                set.Add(idExpr.ID().GetText());
-                return;
-            }
-
-            for(int i = 0; i < tree.ChildCount; i++)
-            {
-                var child = tree.GetChild(i);
-                GetVariables(child, set);
-            }
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gamba.Simplification
+namespace Gamba.Utility
 {
     public enum AstClassification
     {
@@ -42,7 +42,19 @@ namespace Gamba.Simplification
                 Classify(operand, mapping);
             }
 
-            switch(node)
+            if(node is BinaryNode bin && bin.Operands[0] is ConstNode && bin.Operands[1] is ConstNode)
+            {
+                mapping[node] = AstClassification.Linear;
+                return;
+            }
+
+            if(node is UnaryNode && node.Operands[0] is ConstNode)
+            {
+                mapping[node] = AstClassification.Linear;
+                return;
+            }
+
+            switch (node)
             {
                 // Treat constant and varnodes as linear expressions.
                 case ConstNode:
@@ -56,7 +68,7 @@ namespace Gamba.Simplification
                     break;
                 case MulNode:
                     // If neither operand is a constant, then the expression must be nonlinear.
-                    var constMul = OneOf(op1(), op2(), (AstNode x) => x is ConstNode ? x : null);
+                    var constMul = OneOf(op1(), op2(), (x) => x is ConstNode ? x : null);
                     if (constMul == null)
                     {
                         mapping[node] = AstClassification.Nonlinear;
@@ -87,12 +99,12 @@ namespace Gamba.Simplification
                         mapping[node] = node.Operands.Any(x => mapping[x] == AstClassification.Bitwise) ? AstClassification.Mixed : AstClassification.Linear;
                     else
                         mapping[node] = AstClassification.Bitwise;
-                        break;
+                    break;
                 case AndNode:
                 case OrNode:
                 case XorNode:
                 case NegNode:
-                    bool containsConstantOrArithmetic = node.Operands.Any(x => x is ConstNode || (mapping[x] == AstClassification.Linear && x is not VarNode));
+                    bool containsConstantOrArithmetic = node.Operands.Any(x => x is ConstNode || mapping[x] == AstClassification.Linear && x is not VarNode);
                     bool containsMixedOrNonLinear = node.Operands.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Nonlinear);
 
                     // If a bitwise expression contains nontrivial constants or arithmetic operations, it is nonlinear.

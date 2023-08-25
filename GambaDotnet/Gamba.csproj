@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Analysis\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Gamba.Native\Gamba.Native.vcxproj" />
   </ItemGroup>
 

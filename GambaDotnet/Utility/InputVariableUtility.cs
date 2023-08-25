@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gamba.Simplification
+namespace Gamba.Utility
 {
     public class InputVariableUtility
     {
@@ -16,13 +16,13 @@ namespace Gamba.Simplification
             // Create an entry for the parent if it does not exist already.
             inputVariables.TryAdd(parent, new());
 
-            foreach(var child in node.Operands)
+            foreach (var child in node.Operands)
             {
                 // Collect input variables for the child node.
                 Collect(child, node);
 
-               // if(child is VarNode varNode)
-                  //  inputVariables.TryGe
+                // if(child is VarNode varNode)
+                //  inputVariables.TryGe
             }
         }
     }

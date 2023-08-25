@@ -81,7 +81,7 @@ namespace Gamba.Simplification
                 case AddNode:
                     if (node.Operands.Any(x => mapping[x] == AstClassification.Nonlinear))
                         mapping[node] = AstClassification.Nonlinear;
-                    else if (node.Operands.Any(x => mapping[x] == AstClassification.Mixed))
+                    else if (node.Operands.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Bitwise))
                         mapping[node] = AstClassification.Mixed;
                     else if (node.Operands.Any(x => mapping[x] == AstClassification.Linear))
                         mapping[node] = node.Operands.Any(x => mapping[x] == AstClassification.Bitwise) ? AstClassification.Mixed : AstClassification.Linear;

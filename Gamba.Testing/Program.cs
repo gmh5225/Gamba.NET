@@ -5,7 +5,7 @@ using System.Data;
 using System.Diagnostics;
 
 // Remove white space from the MBA string and parse it.
-var input = "(x^(y^z))+2*((y&z)|(x&(y|z)))";
+var input = "(((x&y) + (x&y)) & z)";
 input = StringUtility.RemoveWhitespace(input);
 Console.WriteLine(input);
 var ast = AstParser.Parse(input, 32);

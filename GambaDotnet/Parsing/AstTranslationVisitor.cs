@@ -38,10 +38,7 @@ namespace Gamba.Parsing
         public override AstNode VisitMulExpression([NotNull] ExprParser.MulExpressionContext context)
             => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
 
-        public override AstNode VisitSumExpression([NotNull] ExprParser.SumExpressionContext context)
-            => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
-
-        public override AstNode VisitSubExpression([NotNull] ExprParser.SubExpressionContext context)
+        public override AstNode VisitAddOrSubExpression([NotNull] ExprParser.AddOrSubExpressionContext context) 
             => Binary(context.expression()[0], context.expression()[1], context.children[1].GetText());
 
         public override AstNode VisitShiftExpression([NotNull] ExprParser.ShiftExpressionContext context)
@@ -84,23 +81,7 @@ namespace Gamba.Parsing
             return Visit(context.expression());
         }
 
-        public override AstNode VisitNegationExpression([NotNull] ExprParser.NegationExpressionContext context)
-        {
-            var op1 = Visit(context.expression());
-            var unaryOperator = context.children[0].GetText();
-
-            AstNode node = unaryOperator switch
-            {
-                "~" => new NegNode(op1),
-                // Write "-x" as "0 - x".
-                "-" => new MulNode(op1, new ConstNode(-1, bitSize)),
-                _ => throw new InvalidOperationException($"Unrecognized unary operator: {unaryOperator}")
-            };
-
-            return node;
-        }
-
-        public override AstNode VisitNegativeExpression([NotNull] ExprParser.NegativeExpressionContext context)
+        public override AstNode VisitNegativeOrNegationExpression([NotNull] ExprParser.NegativeOrNegationExpressionContext context)
         {
             var op1 = Visit(context.expression());
             var unaryOperator = context.children[0].GetText();
@@ -115,8 +96,6 @@ namespace Gamba.Parsing
 
             return node;
         }
-
-
 
         public override AstNode VisitNumberExpression([NotNull] ExprParser.NumberExpressionContext context)
         {

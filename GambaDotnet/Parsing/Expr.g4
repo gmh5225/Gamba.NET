@@ -4,11 +4,9 @@ gamba: expression EOF;
 
 expression:   LPARAM expression RPARAM                              #ParenthesizedExpression
             | expression ('**') expression #PowExpression
-            | ('~') expression #NegationExpression
-            | ('-') expression #NegativeExpression
+            | ('~'|'~') expression #NegativeOrNegationExpression
             | expression ('*') expression #MulExpression
-            | expression '+' expression #SumExpression
-            | expression '-' expression #SubExpression
+            | expression ('+'|'-') expression #AddOrSubExpression
             | expression ('<<') expression #ShiftExpression
             | expression ('&') expression #AndExpression
             | expression ('^') expression #XorExpression

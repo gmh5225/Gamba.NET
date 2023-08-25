@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +18,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Antlr4.Runtime" Version="4.6.5" />
+    <PackageReference Include="libLLVM" Version="16.0.6" />
+    <PackageReference Include="LLVMSharp" Version="16.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Analysis\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gamba.Native\Gamba.Native.vcxproj" />
   </ItemGroup>
 
 </Project>

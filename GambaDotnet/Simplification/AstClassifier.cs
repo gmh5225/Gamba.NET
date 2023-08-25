@@ -73,7 +73,7 @@ namespace Gamba.Simplification
                         mapping[node] = AstClassification.Linear;
                     // const * nonlinear = nonlinear
                     else if (otherKind == AstClassification.Nonlinear)
-                        mapping[node] = AstClassification.Linear;
+                        mapping[node] = AstClassification.Nonlinear;
                     // const * mixed(bitwise and arithmetic) = mixed.
                     else
                         mapping[node] = AstClassification.Mixed;

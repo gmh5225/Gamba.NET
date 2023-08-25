@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gamba.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,6 @@ namespace Gamba.Ast
         Ref,
         Power,
         Add,
-        Sub,
         Mul,
         And,
         Or,
@@ -92,10 +92,9 @@ namespace Gamba.Ast
                 return false;
             if (BitSize != astNode.BitSize || Kind != astNode.Kind || Hash != astNode.Hash)
                 return false;
-
-            throw new InvalidOperationException("TODO: Properly implement equality");
+            return AstFormatter.FormatAst(this) == AstFormatter.FormatAst(astNode);
         }
 
-        //public override string ToString() => AstFormatter.FormatAst(this);
+        public override string ToString() => AstFormatter.FormatAst(this);
     }
 }

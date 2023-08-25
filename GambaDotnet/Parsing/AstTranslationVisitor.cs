@@ -69,7 +69,7 @@ namespace Gamba.Parsing
                 // Write "a << b" as "a * 2**b".
                 "<<" => new MulNode(op1, new PowerNode(new ConstNode(2, bitSize), op2)),
                 "+" => new AddNode(op1, op2),
-                "-" => new SubNode(op1, op2),
+                "-" => new AddNode(op1, new MulNode(op2, new ConstNode(-1, bitSize))),
                 "&" => new AndNode(op1, op2),
                 "|" => new OrNode(op1, op2),
                 "^" => new XorNode(op1, op2),
@@ -93,7 +93,7 @@ namespace Gamba.Parsing
             {
                 "~" => new NegNode(op1),
                 // Write "-x" as "0 - x".
-                "-" => new SubNode(new ConstNode(0, bitSize), op1),
+                "-" => new MulNode(op1, new ConstNode(-1, bitSize)),
                 _ => throw new InvalidOperationException($"Unrecognized unary operator: {unaryOperator}")
             };
 
@@ -108,8 +108,8 @@ namespace Gamba.Parsing
             AstNode node = unaryOperator switch
             {
                 "~" => new NegNode(op1),
-                // Write "-x" as "0 - x".
-                "-" => new SubNode(new ConstNode(0, bitSize), op1),
+                // Write "-x" as "x * -1".
+                "-" => new MulNode(op1, new ConstNode(-1, bitSize)),
                 _ => throw new InvalidOperationException($"Unrecognized unary operator: {unaryOperator}")
             };
 

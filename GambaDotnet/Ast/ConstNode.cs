@@ -12,11 +12,17 @@ namespace Gamba.Ast
 
         protected override int OpCount => 0;
 
-        public ulong Value { get; }
+        public long Value { get; }
 
         public ConstNode(ulong value, uint bitSize) : base(bitSize, out Action recalcHash)
         {
-            Value = value;
+            Value = (long)value;
+            recalcHash();
+        }
+
+        public ConstNode(long value, uint bitSize) : base(bitSize, out Action recalcHash)
+        {
+            Value = (long)value;
             recalcHash();
         }
 

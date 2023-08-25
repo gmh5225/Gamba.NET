@@ -3,9 +3,9 @@ grammar Expr;
 gamba: expression EOF;
 
 expression:   LPARAM expression RPARAM                              #ParenthesizedExpression
+            | expression ('**') expression #PowExpression
             | ('~') expression #NegationExpression
             | ('-') expression #NegativeExpression
-            | expression ('**') expression #PowExpression
             | expression ('*') expression #MulExpression
             | expression '+' expression #SumExpression
             | expression '-' expression #SubExpression

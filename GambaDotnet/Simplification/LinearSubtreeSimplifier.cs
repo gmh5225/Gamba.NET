@@ -1,4 +1,5 @@
 ﻿using Gamba.Ast;
+using Gamba.Interop;
 using Gamba.Utility;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,10 @@ namespace Gamba.Simplification
 {
     public static class LinearSubtreeSimplifier
     {
-        public static void SimplifyLinearSubtrees(AstNode node, IReadOnlyDictionary<AstNode, AstClassification> classificationMapping)
+        public static bool SimplifyLinearSubtrees(AstNode node, IReadOnlyDictionary<AstNode, AstClassification> classificationMapping)
         {
+            bool changed = false;
+
             // Otherwise the expression is nonlinear and we must recurse into simplifying child nodes.
             for(int i = 0; i < node.Children.Count; i++)
             {
@@ -20,11 +23,14 @@ namespace Gamba.Simplification
                 if (AstClassifier.IsLinear(classificationMapping[child]))
                 {
                     // Simplify the expression.
-                    var simplified = SimbaSimplifier.SimplifyLinearExpression(child);
+                    var simplified = FastSimba.SimplifyLinearMba(child);
 
                     // Replace the child expression only if SIMBA returns a shorter and syntactically different AST.
-                    if(child.GetHashCode() != simplified.GetHashCode() && simplified.ToString().Length < child.ToString().Length)
+                    if (child.GetHashCode() != simplified.GetHashCode() && simplified.ToString() != child.ToString())
+                    {
                         node.SetOperand(i, simplified);
+                        changed = true;
+                    }
                 }
 
                 // If the child is nonlinear then we recurse into simplifying child nodes.
@@ -33,6 +39,8 @@ namespace Gamba.Simplification
                     SimplifyLinearSubtrees(child, classificationMapping);
                 }
             }
+
+            return changed;
         }
     }
 }

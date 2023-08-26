@@ -12,7 +12,7 @@ define_language! {
         "|" = Or([Id; 2]),               // (| a b)
 
         // Values:
-        Variable(char),                  // (x) 
+        Symbol(Symbol),                  // (x) 
         Constant(i64),                   // (int)
     }
 }
@@ -24,7 +24,7 @@ fn make_rules() -> Vec<Rewrite<Expr, ()>> {
         rewrite!("add-0"; "(+ ?a 0)" => "?a"),
         rewrite!("mul-0"; "(* ?a 0)" => "0"),
         rewrite!("mul-1"; "(* ?a 1)" => "?a"),
-        rewrite!("and-0"; "(& ?a ?a)" => "(?a)"),
+        rewrite!("and-0"; "(& ?a ?a)" => "?a"),
     ]
 }
 
@@ -50,5 +50,5 @@ fn simplify(s: &str) -> String {
 fn main() {
     println!("Hello, world!");
 
-    println!("{}", simplify("(& a a)"));
+    println!("{}", simplify("(& a (& a a))"));
 }

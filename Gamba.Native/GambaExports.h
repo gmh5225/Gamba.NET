@@ -1,6 +1,8 @@
 #pragma once
 #include "Parsing/ShuttingYard.h"
 #include "SIMBA/Simplifier.h"
+#include "SIMBA/MBAChecker.h"
+
 #define GAMBA_EXPORT extern "C" __declspec(dllexport)
 
 class ImmutableManagedVector
@@ -54,6 +56,12 @@ GAMBA_EXPORT unsigned int GetVecCount(ImmutableManagedVector* vec)
 GAMBA_EXPORT void* GetVecElementAt(ImmutableManagedVector* vec, int index)
 {
 	return vec->GetElement(index);
+}
+
+GAMBA_EXPORT bool CheckLinear(char* mbaExpr)
+{
+	LSiMBA::MBAChecker mbaChecker;
+	return mbaChecker.check_expression(mbaExpr);
 }
 
 GAMBA_EXPORT bool SimplifyLinearMba(char* expr, char** outSimplifiedExpr, int bitCount, bool useZ3, bool checkLinear, bool fastCheck, bool runParallel)

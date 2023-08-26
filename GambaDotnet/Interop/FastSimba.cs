@@ -12,6 +12,11 @@ namespace Gamba.Interop
 {
     public static class FastSimba
     {
+        public unsafe static bool CheckLinear(AstNode node)
+        {
+            return CheckLinear(new MarshaledString(node.ToString()));
+        }
+
         public unsafe static AstNode SimplifyLinearMba(AstNode node, bool checkLinear = true, bool fastCheck = true, bool runParallel = false, bool useZ3 = false)
         {
             // Convert the ast to a string.
@@ -28,6 +33,9 @@ namespace Gamba.Interop
             var simplifiedStr = StringMarshaler.AcquireString(simplifiedExprPtr);
             return AstParser.Parse(simplifiedStr, node.BitSize);
         }
+
+        [DllImport("Gamba.Native")]
+        public unsafe static extern bool CheckLinear(sbyte* exprStr);
 
         [DllImport("Gamba.Native")]
         public unsafe static extern bool SimplifyLinearMba(sbyte* exprStr, out nint simplifiedExprStr, uint bitCount, bool useZ3, bool checkLinear, bool fastCheck, bool runParallel);

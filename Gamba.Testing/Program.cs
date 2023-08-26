@@ -13,6 +13,17 @@ using System.Text.RegularExpressions;
 
 var input = "(x^y)-(x&~y^~z)+(~x|y)-(x&~y&~z)-(~x&~y&~z)+2*(~x|~y&~z)-3*(~x&y&z)-(~x|y|~z)-(x&~y)";
 var ast = AstParser.Parse(input, 64);
+
+
+foreach (var child in ast.Children)
+{
+    var isLinear = FastSimba.CheckLinear(child);
+    if (isLinear)
+    {
+        Console.WriteLine($"Linear subtree: {child}");
+    }
+}
+
 Console.WriteLine($"Ast before simplification: {ast}");
 
 var simplifier = new AstSimplifier(ast);

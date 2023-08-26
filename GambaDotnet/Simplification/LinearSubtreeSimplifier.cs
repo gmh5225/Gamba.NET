@@ -13,10 +13,10 @@ namespace Gamba.Simplification
         public static void SimplifyLinearSubtrees(AstNode node, IReadOnlyDictionary<AstNode, AstClassification> classificationMapping)
         {
             // Otherwise the expression is nonlinear and we must recurse into simplifying child nodes.
-            for(int i = 0; i < node.Operands.Count; i++)
+            for(int i = 0; i < node.Children.Count; i++)
             {
                 // If the child is linear then we simplify it and update the current operand.
-                var child = node.Operands[i];
+                var child = node.Children[i];
                 if (AstClassifier.IsLinear(classificationMapping[child]))
                 {
                     // Simplify the expression.

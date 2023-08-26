@@ -25,7 +25,7 @@ namespace Gamba.Ast
     {
         private List<AstNode> operands;
 
-        public IReadOnlyList<AstNode> Operands => operands.AsReadOnly();
+        public IReadOnlyList<AstNode> Children => operands.AsReadOnly();
 
         public abstract AstKind Kind { get; }
 

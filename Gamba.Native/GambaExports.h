@@ -1,6 +1,6 @@
 #pragma once
 #include "Parsing/ShuttingYard.h"
-
+#include "SIMBA/Simplifier.h"
 #define GAMBA_EXPORT extern "C" __declspec(dllexport)
 
 class ImmutableManagedVector
@@ -55,3 +55,16 @@ GAMBA_EXPORT void* GetVecElementAt(ImmutableManagedVector* vec, int index)
 {
 	return vec->GetElement(index);
 }
+
+GAMBA_EXPORT bool SimplifyLinearMba(char* expr, char** outSimplifiedExpr, int bitCount, bool useZ3, bool checkLinear, bool fastCheck, bool runParallel)
+{
+	std::string strExpr = expr;
+	std::string strSimplifiedExpr;
+	bool success = LSiMBA::Simplifier::simplify_linear_mba(strExpr, strSimplifiedExpr, bitCount, useZ3, checkLinear, fastCheck, runParallel);
+	if (!success)
+		return false;
+
+	*outSimplifiedExpr = _strdup(strSimplifiedExpr.c_str());
+	return true;
+}
+

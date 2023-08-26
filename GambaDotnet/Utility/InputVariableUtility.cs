@@ -9,21 +9,16 @@ namespace Gamba.Utility
 {
     public class InputVariableUtility
     {
-        private Dictionary<AstNode, HashSet<VarNode>> inputVariables = new();
-
-        public void Collect(AstNode node, AstNode parent)
+        public static void CollectInputVariables(AstNode x, HashSet<VarNode> variables)
         {
-            // Create an entry for the parent if it does not exist already.
-            inputVariables.TryAdd(parent, new());
-
-            foreach (var child in node.Operands)
+            if (x is VarNode varNode)
             {
-                // Collect input variables for the child node.
-                Collect(child, node);
-
-                // if(child is VarNode varNode)
-                //  inputVariables.TryGe
+                variables.Add(varNode);
+                return;
             }
+
+            foreach(var child in x.Children)
+                CollectInputVariables(child, variables);
         }
     }
 }

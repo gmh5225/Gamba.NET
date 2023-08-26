@@ -17,11 +17,11 @@ namespace Gamba.Utility
         public IReadOnlyDictionary<AstNode, int?> GetDegreeMapping(AstNode node)
         {
             // Collect degrees for children nodes.
-            foreach (var child in node.Operands)
+            foreach (var child in node.Children)
                 GetDegreeMapping(child);
 
-            var deg1 = () => mapping[node.Operands[0]];
-            var deg2 = () => mapping[node.Operands[1]];
+            var deg1 = () => mapping[node.Children[0]];
+            var deg2 = () => mapping[node.Children[1]];
 
             switch (node)
             {
@@ -36,8 +36,8 @@ namespace Gamba.Utility
 
                 // The degree of the power node(x^y) is equal to degree(x) * y.
                 case PowerNode:
-                    var op1 = node.Operands[0];
-                    var op2 = node.Operands[1];
+                    var op1 = node.Children[0];
+                    var op2 = node.Children[1];
                     // If op1 is a varible and op2 is a constant then deg = degree(op1) * op2.
                     if (op1 is VarNode && op2 is ConstNode op2ConstPower)
                         mapping[node] = ComputePowerNodeDegree(deg1(), (int)op2ConstPower.Value);

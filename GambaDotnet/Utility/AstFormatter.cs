@@ -34,9 +34,9 @@ namespace Gamba.Utility
             {
                 sb.Append("(");
 
-                FormatAstInternal(node.Operands[0], ref sb);
+                FormatAstInternal(node.Children[0], ref sb);
                 sb.Append($" {GetOperatorName(node.Kind)} ");
-                FormatAstInternal(node.Operands[1], ref sb);
+                FormatAstInternal(node.Children[1], ref sb);
 
                 sb.Append(")");
                 return;
@@ -46,7 +46,7 @@ namespace Gamba.Utility
             {
                 sb.Append("(");
                 sb.Append($"{GetOperatorName(node.Kind)}");
-                FormatAstInternal(node.Operands[0], ref sb);
+                FormatAstInternal(node.Children[0], ref sb);
                 sb.Append(")");
                 return;
             }

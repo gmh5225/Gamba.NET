@@ -11,21 +11,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Gamba.Native\Gamba.Native.vcxproj">
-      <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
       <Private>False</Private>
-      <CopyLocalSatelliteAssemblies>True</CopyLocalSatelliteAssemblies>
     </ProjectReference>
     <ProjectReference Include="..\GambaDotnet\Gamba.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Gamba.Native.lib">
+    <None Include="..\x64\Release\Gamba.Native.dll" Link="Gamba.Native.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+	    <None Include="..\x64\Release\Gamba.Native.pdb" Link="Gamba.Native.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(SolutionDir)/x64/Release/Gamba.Native.dll&quot; &quot;$(TargetDir)&quot; /Y" />
-  </Target>
 
 </Project>

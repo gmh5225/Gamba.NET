@@ -34,21 +34,21 @@ namespace Gamba.Utility
 
         private static void Classify(AstNode node, Dictionary<AstNode, AstClassification> mapping)
         {
-            var op1 = () => node.Operands[0];
-            var op2 = () => node.Operands[1];
+            var op1 = () => node.Children[0];
+            var op2 = () => node.Children[1];
 
-            foreach (var operand in node.Operands)
+            foreach (var operand in node.Children)
             {
                 Classify(operand, mapping);
             }
 
-            if(node is BinaryNode bin && bin.Operands[0] is ConstNode && bin.Operands[1] is ConstNode)
+            if(node is BinaryNode bin && bin.Children[0] is ConstNode && bin.Children[1] is ConstNode)
             {
                 mapping[node] = AstClassification.Linear;
                 return;
             }
 
-            if(node is UnaryNode && node.Operands[0] is ConstNode)
+            if(node is UnaryNode && node.Children[0] is ConstNode)
             {
                 mapping[node] = AstClassification.Linear;
                 return;
@@ -75,7 +75,7 @@ namespace Gamba.Utility
                         break;
                     }
 
-                    var other = node.Operands.Single(x => x != constMul);
+                    var other = node.Children.Single(x => x != constMul);
                     var otherKind = mapping[other];
                     // const * bitwise = mixed expression
                     if (otherKind == AstClassification.Bitwise)
@@ -91,12 +91,12 @@ namespace Gamba.Utility
                         mapping[node] = AstClassification.Mixed;
                     break;
                 case AddNode:
-                    if (node.Operands.Any(x => mapping[x] == AstClassification.Nonlinear))
+                    if (node.Children.Any(x => mapping[x] == AstClassification.Nonlinear))
                         mapping[node] = AstClassification.Nonlinear;
-                    else if (node.Operands.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Bitwise))
+                    else if (node.Children.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Bitwise))
                         mapping[node] = AstClassification.Mixed;
-                    else if (node.Operands.Any(x => mapping[x] == AstClassification.Linear))
-                        mapping[node] = node.Operands.Any(x => mapping[x] == AstClassification.Bitwise) ? AstClassification.Mixed : AstClassification.Linear;
+                    else if (node.Children.Any(x => mapping[x] == AstClassification.Linear))
+                        mapping[node] = node.Children.Any(x => mapping[x] == AstClassification.Bitwise) ? AstClassification.Mixed : AstClassification.Linear;
                     else
                         mapping[node] = AstClassification.Bitwise;
                     break;
@@ -104,14 +104,14 @@ namespace Gamba.Utility
                 case OrNode:
                 case XorNode:
                 case NegNode:
-                    bool containsConstantOrArithmetic = node.Operands.Any(x => x is ConstNode || mapping[x] == AstClassification.Linear && x is not VarNode);
-                    bool containsMixedOrNonLinear = node.Operands.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Nonlinear);
+                    bool containsConstantOrArithmetic = node.Children.Any(x => x is ConstNode || mapping[x] == AstClassification.Linear && x is not VarNode);
+                    bool containsMixedOrNonLinear = node.Children.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Nonlinear);
 
                     // If a bitwise expression contains nontrivial constants or arithmetic operations, it is nonlinear.
                     // Alternatively if the bitwise expression has any mixed or nonlinear operations, then it is also nonlinear.
                     if (containsConstantOrArithmetic || containsMixedOrNonLinear)
                         mapping[node] = AstClassification.Nonlinear;
-                    else if (node.Operands.Any(x => (mapping[x] == AstClassification.Linear || mapping[x] == AstClassification.Mixed) && x is not VarNode))
+                    else if (node.Children.Any(x => (mapping[x] == AstClassification.Linear || mapping[x] == AstClassification.Mixed) && x is not VarNode))
                         mapping[node] = AstClassification.Mixed;
                     else
                         mapping[node] = AstClassification.Bitwise;

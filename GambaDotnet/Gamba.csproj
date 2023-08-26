@@ -20,6 +20,7 @@
     <PackageReference Include="Antlr4.Runtime" Version="4.6.5" />
     <PackageReference Include="libLLVM" Version="16.0.6" />
     <PackageReference Include="LLVMSharp" Version="16.0.0" />
+    <PackageReference Include="Microsoft.Z3" Version="4.11.2" />
   </ItemGroup>
 
   <ItemGroup>

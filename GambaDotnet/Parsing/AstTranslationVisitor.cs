@@ -100,7 +100,7 @@ namespace Gamba.Parsing
         public override AstNode VisitNumberExpression([NotNull] ExprParser.NumberExpressionContext context)
         {
             var text = context.NUMBER().GetText();
-            var value = ulong.Parse(text, text.Contains("0x") ? NumberStyles.HexNumber : NumberStyles.Number);
+            var value = ulong.Parse(text.Replace("0x", ""), text.Contains("0x") ? NumberStyles.HexNumber : NumberStyles.Number);
             return new ConstNode(value, bitSize);
         }
 

@@ -24,9 +24,12 @@ COMMA       : ',';
 
 
 STRING      : ('"' ~["]* '"') | '%' STRING;
-NUMBER      : '0x'? [0-9]+;
 
-ID          : (([a-zA-Z0-9]|'_')+)?;
+// DECIMAL      : [0-9]+;
+// HEXADECIMAL: '0x' ([a-fA-F0-9])+;
+NUMBER: ([0-9]+) | ('0x' ([a-fA-F0-9])+);
+
+ID          : [a-zA-Z] ([a-zA-Z0-9_])*;
 
 WS          : [ \t\r\n]+ -> skip ;
 

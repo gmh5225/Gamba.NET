@@ -1,5 +1,6 @@
 ﻿using Gamba.Ast;
 using Gamba.Parsing;
+using Gamba.Utility;
 using LLVMSharp.Interop;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace Gamba.Interop
 {
     public static class FastSimba
     {
+        public unsafe static bool CheckLinear(string expr)
+        {
+            return CheckLinear(new MarshaledString(StringUtility.RemoveWhitespace(expr)));
+        }
+
         public unsafe static bool CheckLinear(AstNode node)
         {
             return CheckLinear(new MarshaledString(node.ToString()));

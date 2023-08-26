@@ -1,6 +1,7 @@
 ﻿using Gamba.Ast;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,28 +29,24 @@ namespace Gamba.Utility
         public static IReadOnlyDictionary<AstNode, AstClassification> Classify(AstNode src)
         {
             var mapping = new Dictionary<AstNode, AstClassification>();
-            Classify(src, mapping);
+            Classify(src, mapping, new HashSet<AstNode>());
             return mapping.AsReadOnly();
         }
 
-        private static void Classify(AstNode node, Dictionary<AstNode, AstClassification> mapping)
+        private static void Classify(AstNode node, Dictionary<AstNode, AstClassification> mapping, HashSet<AstNode> constMapping)
         {
             var op1 = () => node.Children[0];
-            var op2 = () => node.Children[1];
+            var op2 = () => node.Children[1];   
 
             foreach (var operand in node.Children)
             {
-                Classify(operand, mapping);
+                Classify(operand, mapping, constMapping);
             }
 
-            if(node is BinaryNode bin && bin.Children[0] is ConstNode && bin.Children[1] is ConstNode)
+            // Constant operations are always linear.
+            if (node.Children.Any() && node.Children.All(x => constMapping.Contains(x)))
             {
-                mapping[node] = AstClassification.Linear;
-                return;
-            }
-
-            if(node is UnaryNode && node.Children[0] is ConstNode)
-            {
+                constMapping.Add(node);
                 mapping[node] = AstClassification.Linear;
                 return;
             }
@@ -58,6 +55,9 @@ namespace Gamba.Utility
             {
                 // Treat constant and varnodes as linear expressions.
                 case ConstNode:
+                    constMapping.Add(node);
+                    mapping[node] = AstClassification.Linear;
+                    break;
                 case VarNode:
                     mapping[node] = AstClassification.Linear;
                     break;
@@ -68,7 +68,7 @@ namespace Gamba.Utility
                     break;
                 case MulNode:
                     // If neither operand is a constant, then the expression must be nonlinear.
-                    var constMul = OneOf(op1(), op2(), (x) => x is ConstNode ? x : null);
+                    var constMul = OneOf(op1(), op2(), (x) => constMapping.Contains(x) ? x : null);
                     if (constMul == null)
                     {
                         mapping[node] = AstClassification.Nonlinear;
@@ -104,7 +104,7 @@ namespace Gamba.Utility
                 case OrNode:
                 case XorNode:
                 case NegNode:
-                    bool containsConstantOrArithmetic = node.Children.Any(x => x is ConstNode || mapping[x] == AstClassification.Linear && x is not VarNode);
+                    bool containsConstantOrArithmetic = node.Children.Any(x => constMapping.Contains(x) || mapping[x] == AstClassification.Linear && x is not VarNode);
                     bool containsMixedOrNonLinear = node.Children.Any(x => mapping[x] == AstClassification.Mixed || mapping[x] == AstClassification.Nonlinear);
 
                     // If a bitwise expression contains nontrivial constants or arithmetic operations, it is nonlinear.

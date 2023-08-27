@@ -29,6 +29,8 @@ namespace Gamba.Ast
 
         public abstract AstKind Kind { get; }
 
+        public string Operator => AstFormatter.GetOperatorName(Kind);
+
         public uint BitSize { get; }
 
         protected int Hash { get; private set; }

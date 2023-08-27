@@ -25,6 +25,9 @@ fn make_rules() -> Vec<Rewrite<Expr, ()>> {
         rewrite!("mul-0"; "(* ?a 0)" => "0"),
         rewrite!("mul-1"; "(* ?a 1)" => "?a"),
         rewrite!("and-0"; "(& ?a ?a)" => "?a"),
+        rewrite!("and-1"; "(& ?a (& ?b ?a))" => "(& ?a ?b)"),
+        rewrite!("xor-1"; "(^ ?a -1)" => "(~ ?a)"),
+        rewrite!("const-1"; "(& ?a Constant)" => "(& Constant ?a)"),
     ]
 }
 
@@ -50,5 +53,5 @@ fn simplify(s: &str) -> String {
 fn main() {
     println!("Hello, world!");
 
-    println!("{}", simplify("(& a (& a a))"));
+    println!("{}", simplify("(& a 11111111)"));
 }

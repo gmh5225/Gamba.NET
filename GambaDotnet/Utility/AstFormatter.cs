@@ -35,7 +35,7 @@ namespace Gamba.Utility
                 sb.Append("(");
 
                 FormatAstInternal(node.Children[0], ref sb);
-                sb.Append($" {GetOperatorName(node.Kind)} ");
+                sb.Append($"{GetOperatorName(node.Kind)}");
                 FormatAstInternal(node.Children[1], ref sb);
 
                 sb.Append(")");
@@ -54,7 +54,7 @@ namespace Gamba.Utility
             throw new InvalidOperationException($"Cannot print ast kind: {node.Kind}");
         }
 
-        private static string GetOperatorName(AstKind kind)
+        public static string GetOperatorName(AstKind kind)
         {
             return kind switch
             {

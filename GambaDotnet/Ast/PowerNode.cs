@@ -10,6 +10,10 @@ namespace Gamba.Ast
     {
         public override AstKind Kind => AstKind.Power;
 
+        public PowerNode(AstNode op1, int power) : base(op1, new ConstNode(power, op1.BitSize))
+        {
+        }
+
         public PowerNode(AstNode op1, AstNode op2) : base(op1, op2)
         {
 

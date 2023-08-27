@@ -11,18 +11,44 @@ using System.Data;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-var input = "(x^y)-(x&~y^~z)+(~x|y)-(x&~y&~z)-(~x&~y&~z)+2*(~x|~y&~z)-3*(~x&y&z)-(~x|y|~z)-(x&~y)";
+var input = "18446744073709551574*(x|~y)*~x+14*(x|~y)**2+18446744073709551598*y*~x+6*y*(x|~y)+18446744073709551609*(x|~y)*(y+18446744073709551615*(x&y))+18446744073709551595*(x|~y)*~(x|y)+14*(x|~y)*(~x|y)+18446744073709551588*(x|~y)+18446744073709551567*(x|~y)*(x&~y)+18446744073709551553*(x|~y)*(x&y)+18446744073709551613*y*(y+18446744073709551615*(x&y))+18446744073709551607*y*~(x|y)+6*y*(~x|y)+18446744073709551604*y+18446744073709551589*y*(x&y)+18446744073709551595*y*(x&~y)";
+input = "-4*(x^y)*(x&y)+7*(x^y)*(x&~y)+2*(x^y)*~(x|y)+8*(x^y)*~(x|~y)+1*(x^y)*~y-7*(x^y)*~(x&y)+5*(x^y)*~(x^y)";
+input = "(x^y)*(18446744073709551615+3*(x&y)+7*(x&~y)+8*(~x&y)+18446744073709551611*(x^y)+18446744073709551615*y+18446744073709551614*(x|y))";
+input = "-4*(x^y)*(x&y)+7*(x^y)*(x&~y)+2*(x^y)*~(x|y)+8*(x^y)*~(x|~y)+(x^y)*~y-7*(x^y)*~(x&y)+5*(x^y)*~(x^y)";
+//input = "(x^y)*(-4*(x&y)+7*(x&~y)+2*~(x|y)+8*~(x|~y)+~y-7*~(x&y)+5*~(x^y))";
+input = "100*((((x^y)*z)+((x^y)*q)))";
+input = "((((x^y)*z)+((x^y)*q)))";
 var ast = AstParser.Parse(input, 64);
+Console.WriteLine(ast.ToString());
 
-
-foreach (var child in ast.Children)
+var classification = AstClassifier.Classify(ast);
+foreach (var child in classification.Keys)
 {
-    var isLinear = FastSimba.CheckLinear(child);
-    if (isLinear)
+    bool printClassification = true;
+    if (printClassification)
     {
-        Console.WriteLine($"Linear subtree: {child}");
+        Console.WriteLine($"Subtree: {classification[child]} {child}");
+    }
+
+    else
+    {
+        var isLinear = FastSimba.CheckLinear(child);
+        if (isLinear)
+        {
+            if (AstClassifier.IsLinear(classification[child]) != isLinear)
+                throw new InvalidOperationException();
+            Console.WriteLine($"Linear subtree: {child}");
+        }
+
+        else
+        {
+            Console.WriteLine($"Nonlinear subtree: {child}");
+        }
     }
 }
+
+var factorizer = new PolynomialFactorizer();
+factorizer.TryFactorizePolynomial(ast);
 
 Console.WriteLine($"Ast before simplification: {ast}");
 
